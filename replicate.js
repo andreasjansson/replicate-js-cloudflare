@@ -4,9 +4,10 @@ const DEFAULT_POLLING_INTERVAL = 5000
 const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms))
 const isNode = typeof process !== "undefined" && process.versions != null && process.versions.node != null;
 
-// This code uses fetch, which is still experimental in Node 18, so we import a polyfill for Node
-if(isNode)
-    globalThis.fetch = (await import('node-fetch'))['default'];
+// DISABLED FOR CLOUDFLARE SUPPORT. Globally scoped await isn't supported on Cloudflare.
+//// This code uses fetch, which is still experimental in Node 18, so we import a polyfill for Node
+// if(isNode)
+//     globalThis.fetch = (await import('node-fetch'))['default'];
 
 class Replicate {
 
@@ -27,7 +28,7 @@ class Replicate {
         // Depedency injection for tests
         if(!this.httpClient)
             this.httpClient = new HTTPClient({proxyUrl: this.proxyUrl, token: this.token});
-        
+
         // Syntax sugar to support replicate.models.get()
         this.models = { get: this.getModel.bind(this) }
     }
@@ -38,7 +39,7 @@ class Replicate {
 }
 
 class Model {
-    
+
     path;
     version;
     httpClient;
@@ -49,7 +50,7 @@ class Model {
         await model.getModelDetails();
         return model;
     }
-    
+
     constructor(options) {
         Object.assign(this, options) //path, version
         Object.assign(this, options.replicate) //httpClient, pollingInterval
@@ -97,13 +98,13 @@ export class HTTPClient{
 
     baseUrl;
     headers;
-    
+
     constructor(options){
         this.baseUrl = options.proxyUrl ? `${options.proxyUrl}/${BASE_URL}` : BASE_URL;
         this.headers = {
             'Authorization': `Token ${options.token}`,
-            'Content-Type': 'application/json', 
-            'Accept': 'application/json' 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         }
     }
 

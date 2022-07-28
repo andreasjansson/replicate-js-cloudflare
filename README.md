@@ -2,36 +2,18 @@
 
 This is a Javacript client for Replicate. It lets you run models from your browser, from node, or from a web worker. It is promise-based and designed with async / await in mind.
 
+> **Note**
+> This fork has been modified from the [original repo](https://github.com/nicholascelestin/replicate-js) to work on Cloudflare Workers.
+
 # Getting Started
 
 You can run a model and get its output:
 
-## From A Browser
+## From Cloudflare Workers
 
-```html
-<script type="module">
-// replace @0.0.5 with @branch-name or @commit-sha for more specific version
-import Replicate from "https://cdn.jsdelivr.net/gh/nicholascelestin/replicate-js@0.0.6/replicate.js"
-
-// NEVER put your token in any publically accessible client-side Javascript
-// Instead, use a proxy-- see Authentication section below
-const replicate = new Replicate({proxyUrl: 'http://localhost:3000/api'});
-
-const helloWorldModel = await replicate.models.get('replicate/hello-world');
-const helloWorldPrediction = await helloWorldModel.predict({ text: "test"});
-console.log(helloWorldPrediction);
-</script>
-```
-
-## From Node
-
-`npm install github:nicholascelestin/replicate-js`
-
-`npm install node-fetch`
+`npm install github:andreasjansson/replicate-js`
 
 Works with Node v16 and up.
-
-Depends on node-fetch.
 
 Uses ES6-style module imports. Either set `type` to `module` in your package.json file or use a `.mjs` file extension
 
@@ -89,50 +71,19 @@ const prediction = await replicate.predict({ text: "test"});
 
 ## For Node
 
-`npm install github:nicholascelestin/replicate-js`
+`npm install github:andreasjansson/replicate-js`
 
 `npm install node-fetch`
-
-## For A Browser
-
-```html
-<script type="module">
-// replace 0.0.5 with @branch-name or @commit-sha for more specific version
-import Replicate from "https://cdn.jsdelivr.net/gh/nicholascelestin/replicate-js@0.0.6/replicate.js"
-</script>
-```
 
 ## Authentication
 
 ## For Node
 
-In a Node.js environment, you can set the `REPLICATE_API_TOKEN` environment variable to your API token. 
+In a Node.js environment, you can set the `REPLICATE_API_TOKEN` environment variable to your API token.
 For example, by running this before any Javascript that uses the API: `export REPLICATE_API_TOKEN=<your token>`.
 
 You can also pass your API token directly to the Replicate constructor.
 
 ```javascript
 const replicate = new Replicate({token: 'YOUR_TOKEN'});
-```
-
-## For A Browser
-
-This library will work in a browser, but:
-
-* You should NEVER expose your API token in any publically accessible client-side Javascript.
-* You should NEVER use the unmodified proxy in this repo in a public environment, and certainly not a production environment.
-
-If you do so, you run the risk of your API token being stolen or being charged for unauthorized usage.
-
-However, for private development and testing, you can use the lightweight proxy bundled in this repository. A proxy is necessary to avoid CORS issues with the Replicate HTTP API.
-
-`export REPLICATE_API_TOKEN=<your token>`
-
-`node ./cors-proxy.js`
-
-```html
-<script type="module">
-    import Replicate from "https://cdn.jsdelivr.net/gh/nicholascelestin/replicate-js@0.0.6/replicate.js"
-    let replicate = new Replicate({proxyUrl: 'http://localhost:3000/api'});
-</script>
 ```

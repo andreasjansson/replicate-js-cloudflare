@@ -1,7 +1,7 @@
 {
-  "name": "replicate-js",
+  "name": "replicate-js-cloudflare",
   "version": "0.0.2",
-  "description": "WIP Replicate JS Client",
+  "description": "WIP Replicate JS Client that works on Cloudflare",
   "main": "replicate.js",
   "type": "module",
   "dependencies": {
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nicholascelestin/replicate-js.git"
+    "url": "git+https://github.com/andreasjansson/replicate-js.git"
   },
   "author": "Nicholas Celestin",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nicholascelestin/replicate-js/issues"
+    "url": "https://github.com/andreasjansson/replicate-js/issues"
   },
-  "homepage": "https://github.com/nicholascelestin/replicate-js#readme",
+  "homepage": "https://github.com/andreasjansson/replicate-js#readme",
   "devDependencies": {
     "ava": "^4.3.1"
   }
