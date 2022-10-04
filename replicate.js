@@ -1,4 +1,4 @@
-const BASE_URL = "https://api.replicate.com/v1"
+const DEFAULT_BASE_URL = "https://api.replicate.com/v1"
 const DEFAULT_POLLING_INTERVAL = 5000
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms))
@@ -15,11 +15,14 @@ class Replicate {
     proxyUrl;
     httpClient;
     pollingInterval;
+    baseUrl;
 
     constructor(options) {
         Object.assign(this, options);
 
-         // Uses some lesser-known operators to make null-safety easy
+        // Uses some lesser-known operators to make null-safety easy
+      this.baseUrl ||= DEFAULT_BASE_URL;
+      console.log(this.baseUrl);
         this.pollingInterval ||= DEFAULT_POLLING_INTERVAL;
         this.token ||= (isNode) ? process?.env?.REPLICATE_API_TOKEN : null;
         if (!this.token && !this.proxyUrl)
@@ -27,7 +30,7 @@ class Replicate {
 
         // Depedency injection for tests
         if(!this.httpClient)
-            this.httpClient = new HTTPClient({proxyUrl: this.proxyUrl, token: this.token});
+            this.httpClient = new HTTPClient({proxyUrl: this.proxyUrl, token: this.token, baseUrl: this.baseUrl});
 
         // Syntax sugar to support replicate.models.get()
         this.models = { get: this.getModel.bind(this) }
@@ -100,7 +103,7 @@ export class HTTPClient{
     headers;
 
     constructor(options){
-        this.baseUrl = options.proxyUrl ? `${options.proxyUrl}/${BASE_URL}` : BASE_URL;
+        this.baseUrl = options.proxyUrl ? `${options.proxyUrl}/${options.baseUrl}` : options.baseUrl;
         this.headers = {
             'Authorization': `Token ${options.token}`,
             'Content-Type': 'application/json',
