@@ -16,13 +16,13 @@ class Replicate {
     httpClient;
     pollingInterval;
     baseUrl;
+    headers;
 
     constructor(options) {
         Object.assign(this, options);
 
         // Uses some lesser-known operators to make null-safety easy
-      this.baseUrl ||= DEFAULT_BASE_URL;
-      console.log(this.baseUrl);
+        this.baseUrl ||= DEFAULT_BASE_URL;
         this.pollingInterval ||= DEFAULT_POLLING_INTERVAL;
         this.token ||= (isNode) ? process?.env?.REPLICATE_API_TOKEN : null;
         if (!this.token && !this.proxyUrl)
@@ -30,7 +30,7 @@ class Replicate {
 
         // Depedency injection for tests
         if(!this.httpClient)
-            this.httpClient = new HTTPClient({proxyUrl: this.proxyUrl, token: this.token, baseUrl: this.baseUrl});
+            this.httpClient = new HTTPClient({proxyUrl: this.proxyUrl, token: this.token, baseUrl: this.baseUrl, this.headers});
 
         // Syntax sugar to support replicate.models.get()
         this.models = { get: this.getModel.bind(this) }
@@ -104,11 +104,10 @@ export class HTTPClient{
 
     constructor(options){
         this.baseUrl = options.proxyUrl ? `${options.proxyUrl}/${options.baseUrl}` : options.baseUrl;
-        this.headers = {
-            'Authorization': `Token ${options.token}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
+        this.headers ||= {};
+        this.headers['Authorization'] = `Token ${options.token}`
+        this.headers['Content-Type'] = 'application/json'
+        this.headers['Accept'] = 'application/json'
     }
 
     async get(url){
